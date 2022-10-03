@@ -1,0 +1,19 @@
+version: '3.5'
+
+volumes:
+  pgdata:
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:14
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+  sqlx:
+    container_name: sqlx
+    build: "."
+    entrypoint: ["bash", "-c", "while true; do sleep 5; done"]
+    environment:
+      - RUST_LOG=debug
+      - DATABASE_URL=postgres://postgres:mysecretpassword@postgres/todos
